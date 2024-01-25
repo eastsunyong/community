@@ -11,6 +11,7 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     "no-var": "error", // var 금지
+    "no-undef": "off",
     "no-multiple-empty-lines": "error", // 여러 줄 공백 금지
     "no-console": ["error", { "allow": ["warn", "error", "info"] }], // console.log() 금지
     "eqeqeq": "error", // 일치 연산자 사용 필수
