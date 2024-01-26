@@ -1,13 +1,21 @@
 import React from 'react';
 import useCustomForm from '@/hooks/useCustomForm';
 import { emailOpt, pwOpt } from '@/interface/validation';
+import { loginErrorCode } from '@/interface/loginErrorCode';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
 import { Button } from '@/components/ui/button';
 import Title from '@/components/common/Title';
 
 const LogIn: React.FC = () => {
-    const { register, handleSubmit, errors, onSubmit } = useCustomForm();
+    const { register, handleSubmit, errors, onSubmit, onError } = useCustomForm();
+    // 에러코드에 따른 메시지 표시
+    let errorMessage = '';
+    if (onError.errorCode !== '') {
+        errorMessage = loginErrorCode(onError.errorCode);
+    }
+
+
     return (
         <div className='w-full h-screen flex-col bg-gray flex items-center justify-center'>
             <Title title='Log in' />
@@ -22,16 +30,16 @@ const LogIn: React.FC = () => {
                     {errors.email && <span className='inline'>{errors.email}</span>}
                 </div>
 
-                <Label>
-                    비밀번호
-                    <Input
-                        type="password"
-                        placeholder='비밀번호를 입력해주세요'
-                        className={`${errors.password ? 'border-error' : 'border-black'}`}
-                        {...register('password', pwOpt)} />
-                    {errors.password && <p>{errors.password}</p>}
-                </Label>
+                <Label>비밀번호</Label>
+                <Input
+                    type="password"
+                    placeholder='비밀번호를 입력해주세요'
+                    className={`${errors.password ? 'border-error' : 'border-black'}`}
+                    {...register('password', pwOpt)} />
+                {errors.password && <p>{errors.password}</p>}
+                {onError && <p className='text-error'></p>}
                 <Button type="submit" className='w-full h-10 bg-blue'>Submit</Button>
+                <span className='text-error'>{errorMessage}</span>
             </form>
         </div>
     );
