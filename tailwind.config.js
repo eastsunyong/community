@@ -20,20 +20,22 @@ module.exports = {
       'error': '#df0c0c',
       'blue': '#1fb6ff',
       'purple': '#7e5bef',
-      'pink': '#ff49db',
       'orange': '#ff7849',
       'green': '#13ce66',
       'yellow': '#ffc82c',
-      'gray-dark': '#273444',
+      'gray-dark': '#dee2e6',
       'gray': '#f8f9fa',
       'gray-light': '#d3dce6',
       'white': '#ffffff',
-      'black': '#000000'
+      'black': '#333333',
+      'fontGray': '#999999',
+      'labelGray': '#707070'
     },
     fontSize: {
-      's': '14px',
-      'm': '16px',
-      'l': '20px',
+      'xs': '14px',
+      's': '16px',
+      'm': '20px',
+      'l': '24px',
       'xl': '30px',
       '2xl': '40px'
     },
