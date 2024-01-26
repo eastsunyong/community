@@ -28,6 +28,11 @@ const useCustomForm = (): UseCustomFormResult => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
     // 여기에서 필요한 로직 수행
+    // if (data.profile == undefined) {
+    //   console.log(1);
+    // } else {
+    //   return;
+    // }
   };
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
   const formattedErrors: Record<keyof FormValues, string> = {
