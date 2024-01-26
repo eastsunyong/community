@@ -1,4 +1,4 @@
-import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldErrors, UseFormWatch } from 'react-hook-form';
 
 type FormValues = {
   email: string;
@@ -6,19 +6,22 @@ type FormValues = {
   nickName: string | undefined;
   id: string | undefined;
   profile: string | undefined;
+  confirm: string | undefined;
 };
 
 type UseCustomFormResult = {
   register: any;
   handleSubmit: (onSubmit: SubmitHandler<FormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
   errors: Record<keyof FormValues, string>;
-  onSubmit: SubmitHandler<FormValues>; // onSubmit 속성을 추가
+  onSubmit: SubmitHandler<FormValues>;
+  watch: UseFormWatch<FormValues>;
 };
 
 const useCustomForm = (): UseCustomFormResult => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues, FieldErrors<FormValues>>({ mode: 'onChange' });
 
@@ -26,7 +29,6 @@ const useCustomForm = (): UseCustomFormResult => {
     console.log(data);
     // 여기에서 필요한 로직 수행
   };
-
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
   const formattedErrors: Record<keyof FormValues, string> = {
     email: '',
@@ -34,6 +36,7 @@ const useCustomForm = (): UseCustomFormResult => {
     nickName: '',
     id: '',
     profile: '',
+    confirm: '',
   };
 
   // 기존 에러 정보를 문자열로 변환하여 할당
@@ -45,7 +48,8 @@ const useCustomForm = (): UseCustomFormResult => {
     register,
     handleSubmit: (fn) => handleSubmit(fn),
     errors: formattedErrors,
-    onSubmit, // onSubmit 속성 추가
+    onSubmit,
+    watch,
   };
 };
 
