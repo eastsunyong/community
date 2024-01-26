@@ -1,23 +1,23 @@
 import { auth } from '@/firebase';
-import { signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 type Iprops = {
   email: string;
   password: string;
 };
 
-export const login = async (data: Iprops) => {
-  let answer = false;
+type LoginResult = {
+  success: boolean;
+  errorCode?: string;
+};
+
+export const login = async (data: Iprops): Promise<LoginResult> => {
   try {
-    const userCredential: UserCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-    console.log('user with signIn', userCredential.user);
-    // localStorage.setItem('accessToken', userCredential.user.);
-    answer = true;
+    await signInWithEmailAndPassword(auth, data.email, data.password);
+    return { success: true };
   } catch (error: any) {
     const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log('error with signIn', errorCode, errorMessage);
-    answer = false;
+    console.error('Error signing in:', errorCode);
+    return { success: false, errorCode };
   }
-  return answer;
 };
