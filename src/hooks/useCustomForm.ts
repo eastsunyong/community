@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors, UseFormWatch } from 'react-hook-form';
 import { login } from '@/api/login';
-type FormValues = {
+import { useNavigate } from 'react-router-dom';
+
+type IFormValues = {
   email: string;
   password: string;
   nickName: string | undefined;
@@ -10,43 +12,46 @@ type FormValues = {
   confirm: string | undefined;
 };
 
-type UseCustomFormResult = {
-  register: any;
-  handleSubmit: (onSubmit: SubmitHandler<FormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
-  errors: Record<keyof FormValues, string>;
-  onSubmit: SubmitHandler<FormValues>;
-  watch: UseFormWatch<FormValues>;
-  condition: {
-    result: boolean;
-    id: string;
-  };
+type IError = {
+  errorCode: string | undefined;
 };
 
-const useCustomForm = (): UseCustomFormResult => {
-  const [condition, setCondition] = useState({
-    result: false,
-    id: '',
+type IUseCustomFormResult = {
+  register: any;
+  handleSubmit: (onSubmit: SubmitHandler<IFormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
+  errors: Record<keyof IFormValues, string>;
+  onSubmit: SubmitHandler<IFormValues>;
+  watch: UseFormWatch<IFormValues>;
+  onError: IError;
+};
+
+const useCustomForm = (): IUseCustomFormResult => {
+  const nav = useNavigate();
+  const [onError, setOnError] = useState<IError>({
+    errorCode: '',
   });
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormValues, FieldErrors<FormValues>>({ mode: 'onChange' });
+  } = useForm<IFormValues, FieldErrors<IFormValues>>({ mode: 'onChange' });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<IFormValues> = async (data) => {
     if (data.profile === undefined) {
-      // data.profile이 undefined일 때 로그인 로직 수행
-      try {
-        condition.result = await login(data);
-        console.log(condition.result);
-      } catch (error: any) {
-        console.error('로그인 실패', error.message);
+      const answer = await login(data);
+      if (answer.success) {
+        nav('/');
+        alert('로그인 성공');
+      } else {
+        setOnError({
+          errorCode: answer.errorCode,
+        });
       }
     }
   };
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
-  const formattedErrors: Record<keyof FormValues, string> = {
+  const formattedErrors: Record<keyof IFormValues, string> = {
     email: '',
     password: '',
     nickName: '',
@@ -57,7 +62,7 @@ const useCustomForm = (): UseCustomFormResult => {
 
   // 기존 에러 정보를 문자열로 변환하여 할당
   Object.keys(errors).forEach((key) => {
-    formattedErrors[key as keyof FormValues] = errors[key as keyof FormValues]?.message || '';
+    formattedErrors[key as keyof IFormValues] = errors[key as keyof IFormValues]?.message || '';
   });
 
   return {
@@ -66,7 +71,7 @@ const useCustomForm = (): UseCustomFormResult => {
     errors: formattedErrors,
     onSubmit,
     watch,
-    condition,
+    onError,
   };
 };
 
