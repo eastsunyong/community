@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors, UseFormWatch } from 'react-hook-form';
+import { login } from '@/api/login';
+import { useNavigate } from 'react-router-dom';
 
-type FormValues = {
+type IFormValues = {
   email: string;
   password: string;
   nickName: string | undefined;
@@ -9,33 +12,46 @@ type FormValues = {
   confirm: string | undefined;
 };
 
-type UseCustomFormResult = {
-  register: any;
-  handleSubmit: (onSubmit: SubmitHandler<FormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
-  errors: Record<keyof FormValues, string>;
-  onSubmit: SubmitHandler<FormValues>;
-  watch: UseFormWatch<FormValues>;
+type IError = {
+  errorCode: string | undefined;
 };
 
-const useCustomForm = (): UseCustomFormResult => {
+type IUseCustomFormResult = {
+  register: any;
+  handleSubmit: (onSubmit: SubmitHandler<IFormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
+  errors: Record<keyof IFormValues, string>;
+  onSubmit: SubmitHandler<IFormValues>;
+  watch: UseFormWatch<IFormValues>;
+  onError: IError;
+};
+
+const useCustomForm = (): IUseCustomFormResult => {
+  const nav = useNavigate();
+  const [onError, setOnError] = useState<IError>({
+    errorCode: '',
+  });
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormValues, FieldErrors<FormValues>>({ mode: 'onChange' });
+  } = useForm<IFormValues, FieldErrors<IFormValues>>({ mode: 'onChange' });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data);
-    // 여기에서 필요한 로직 수행
-    // if (data.profile == undefined) {
-    //   console.log(1);
-    // } else {
-    //   return;
-    // }
+  const onSubmit: SubmitHandler<IFormValues> = async (data) => {
+    if (data.profile === undefined) {
+      const answer = await login(data);
+      if (answer.success) {
+        nav('/');
+        alert('로그인 성공');
+      } else {
+        setOnError({
+          errorCode: answer.errorCode,
+        });
+      }
+    }
   };
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
-  const formattedErrors: Record<keyof FormValues, string> = {
+  const formattedErrors: Record<keyof IFormValues, string> = {
     email: '',
     password: '',
     nickName: '',
@@ -46,7 +62,7 @@ const useCustomForm = (): UseCustomFormResult => {
 
   // 기존 에러 정보를 문자열로 변환하여 할당
   Object.keys(errors).forEach((key) => {
-    formattedErrors[key as keyof FormValues] = errors[key as keyof FormValues]?.message || '';
+    formattedErrors[key as keyof IFormValues] = errors[key as keyof IFormValues]?.message || '';
   });
 
   return {
@@ -55,6 +71,7 @@ const useCustomForm = (): UseCustomFormResult => {
     errors: formattedErrors,
     onSubmit,
     watch,
+    onError,
   };
 };
 
