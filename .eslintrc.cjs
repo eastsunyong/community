@@ -11,6 +11,7 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
+    "no-undef": "off",  // tailwind.confi 버그
     'react-refresh/only-export-components': [
       'warn',
       {
