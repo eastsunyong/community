@@ -1,5 +1,6 @@
+import React, { useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors, UseFormWatch } from 'react-hook-form';
-
+import { login } from '@/api/login';
 type FormValues = {
   email: string;
   password: string;
@@ -15,9 +16,17 @@ type UseCustomFormResult = {
   errors: Record<keyof FormValues, string>;
   onSubmit: SubmitHandler<FormValues>;
   watch: UseFormWatch<FormValues>;
+  condition: {
+    result: boolean;
+    id: string;
+  };
 };
 
 const useCustomForm = (): UseCustomFormResult => {
+  const [condition, setCondition] = useState({
+    result: false,
+    id: '',
+  });
   const {
     register,
     handleSubmit,
@@ -26,13 +35,15 @@ const useCustomForm = (): UseCustomFormResult => {
   } = useForm<FormValues, FieldErrors<FormValues>>({ mode: 'onChange' });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data);
-    // 여기에서 필요한 로직 수행
-    // if (data.profile == undefined) {
-    //   console.log(1);
-    // } else {
-    //   return;
-    // }
+    if (data.profile === undefined) {
+      // data.profile이 undefined일 때 로그인 로직 수행
+      try {
+        condition.result = await login(data);
+        console.log(condition.result);
+      } catch (error: any) {
+        console.error('로그인 실패', error.message);
+      }
+    }
   };
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
   const formattedErrors: Record<keyof FormValues, string> = {
@@ -55,6 +66,7 @@ const useCustomForm = (): UseCustomFormResult => {
     errors: formattedErrors,
     onSubmit,
     watch,
+    condition,
   };
 };
 
