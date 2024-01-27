@@ -31,6 +31,7 @@ const confirmOpt = {
   required: '인증번호를 입력해주세요',
   pattern: {
     value: /^.{1,4}$/,
+    message: '',
   },
 };
 
