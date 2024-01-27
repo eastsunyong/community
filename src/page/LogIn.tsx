@@ -3,7 +3,7 @@ import useCustomForm from '@/hooks/useCustomForm';
 import { emailOpt, pwOpt } from '@/interface/validation';
 import { loginErrorCode } from '@/interface/loginErrorCode';
 import { Button } from '@/components/ui/button';
-import InputField from '@/components/common/InputField';
+import InputField from '@/components/auth/InputField';
 
 const LogIn: React.FC = () => {
     const { register, handleSubmit, errors, onSubmit, onError } = useCustomForm();
