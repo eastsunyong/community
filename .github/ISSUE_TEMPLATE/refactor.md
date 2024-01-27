@@ -1,8 +1,8 @@
 ---
-name: BUG
-about: BUG 발생 시 작성
+name: Refactor
+about: Refactor 할때 작성
 title: ''
-labels: BugFix
+labels: Refactor
 assignees: ''
 
 ---
