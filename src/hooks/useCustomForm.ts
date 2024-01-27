@@ -1,35 +1,15 @@
 import { useState } from 'react';
-import { useForm, SubmitHandler, FieldErrors, UseFormWatch } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
+import { IFormValues, IError, IUseCustomFormResult } from '@/interface';
 import { login } from '@/api/login';
 import { useNavigate } from 'react-router-dom';
-
-type IFormValues = {
-  email: string;
-  password: string;
-  nickName: string | undefined;
-  id: string | undefined;
-  profile: string | undefined;
-  confirm: string | undefined;
-};
-
-type IError = {
-  errorCode: string | undefined;
-};
-
-type IUseCustomFormResult = {
-  register: any;
-  handleSubmit: (onSubmit: SubmitHandler<IFormValues>) => (e: React.BaseSyntheticEvent) => Promise<void>;
-  errors: Record<keyof IFormValues, string>;
-  onSubmit: SubmitHandler<IFormValues>;
-  watch: UseFormWatch<IFormValues>;
-  onError: IError;
-};
 
 const useCustomForm = (): IUseCustomFormResult => {
   const nav = useNavigate();
   const [onError, setOnError] = useState<IError>({
     errorCode: '',
   });
+
   const {
     register,
     handleSubmit,
@@ -38,7 +18,9 @@ const useCustomForm = (): IUseCustomFormResult => {
   } = useForm<IFormValues, FieldErrors<IFormValues>>({ mode: 'onChange' });
 
   const onSubmit: SubmitHandler<IFormValues> = async (data) => {
-    if (data.profile === undefined) {
+    console.log(data);
+
+    if (data.bio === undefined) {
       const answer = await login(data);
       if (answer.success) {
         nav('/');
@@ -54,10 +36,12 @@ const useCustomForm = (): IUseCustomFormResult => {
   const formattedErrors: Record<keyof IFormValues, string> = {
     email: '',
     password: '',
+    passwordCheck: '',
     nickName: '',
     id: '',
     profile: '',
     confirm: '',
+    bio: '',
   };
 
   // 기존 에러 정보를 문자열로 변환하여 할당
