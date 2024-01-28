@@ -27,14 +27,6 @@ const pwCheckOpt = {
   },
 };
 
-const confirmOpt = {
-  required: '인증번호를 입력해주세요',
-  pattern: {
-    value: /^.{1,4}$/,
-    message: '',
-  },
-};
-
 const nickNameOpt = {
   required: '닉네임은 필수 입력입니다',
   minLength: { value: 2, message: '2자리 이상 닉네임을 사용하세요.' },
@@ -45,4 +37,4 @@ const profileOpt = { required: '사진은 필수입니다' };
 
 const bioOpt = { required: '자기소개는 필수 항목입니다' };
 
-export { emailOpt, pwOpt, pwCheckOpt, confirmOpt, nickNameOpt, profileOpt, bioOpt };
+export { emailOpt, pwOpt, pwCheckOpt, nickNameOpt, profileOpt, bioOpt };
