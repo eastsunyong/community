@@ -5,9 +5,7 @@ export interface IFormValues {
   password: string;
   passwordCheck?: string;
   nickName?: string;
-  id?: string;
   profile?: string;
-  confirm?: string;
   bio?: string;
 }
 
