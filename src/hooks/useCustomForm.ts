@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
 import { IFormValues, IError, IUseCustomFormResult } from '@/interface';
-import { login } from '@/api/login';
+import { login, signup } from '@/api/authApi';
 import { useNavigate } from 'react-router-dom';
 
 const useCustomForm = (): IUseCustomFormResult => {
@@ -9,7 +9,6 @@ const useCustomForm = (): IUseCustomFormResult => {
   const [onError, setOnError] = useState<IError>({
     errorCode: '',
   });
-
   const {
     register,
     handleSubmit,
@@ -18,9 +17,8 @@ const useCustomForm = (): IUseCustomFormResult => {
   } = useForm<IFormValues, FieldErrors<IFormValues>>({ mode: 'onChange' });
 
   const onSubmit: SubmitHandler<IFormValues> = async (data) => {
-    console.log(data);
-
-    if (data.bio === undefined) {
+    // 로그인
+    if (!data.passwordCheck && data.password) {
       const answer = await login(data);
       if (answer.success) {
         nav('/');
@@ -31,16 +29,32 @@ const useCustomForm = (): IUseCustomFormResult => {
         });
       }
     }
+    //회원가입
+    if (data.password && data.passwordCheck) {
+      if (data.password !== data.passwordCheck) {
+        return setOnError({
+          errorCode: 'Passwords do not match',
+        });
+      }
+      const answer = await signup(data);
+      if (answer.success) {
+        nav('/');
+        alert('회원가입 성공');
+      } else {
+        setOnError({
+          errorCode: answer.errorCode,
+        });
+      }
+    }
   };
+
   // formattedErrors를 Record<keyof FormValues, string>로 초기화
   const formattedErrors: Record<keyof IFormValues, string> = {
     email: '',
     password: '',
     passwordCheck: '',
     nickName: '',
-    id: '',
     profile: '',
-    confirm: '',
     bio: '',
   };
 
