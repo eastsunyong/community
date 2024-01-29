@@ -11,7 +11,7 @@ const Router = () => {
                 <Route path="/login" element={isAuthenticated ? <Home /> : <LogIn />} />
                 <Route path="/signup" element={isAuthenticated ? <Home /> : <SignIn />} />
                 <Route path="/mypage/:userId" element={isAuthenticated ? <MyPage /> : <LogIn />} />
-                <Route path="/:userId/edit" element={isAuthenticated ? <Edit /> : <LogIn />} />
+                <Route path="/edit/:userId" element={isAuthenticated ? <Edit /> : <LogIn />} />
             </Routes>
         </BrowserRouter>
     )
