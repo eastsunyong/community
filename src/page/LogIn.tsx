@@ -4,6 +4,7 @@ import { emailOpt, pwOpt } from '@/interface/validation';
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/auth/InputField';
 import ErrorText from '@/components/auth/ErrorText';
+import SocialLoginBtn from '@/components/auth/socialLoginBtn';
 
 const LogIn: React.FC = () => {
     const { register, handleSubmit, errors, onSubmit, onError } = useCustomForm();
@@ -17,7 +18,9 @@ const LogIn: React.FC = () => {
                 <InputField label="이메일" name="email" register={register} errors={errors} inputOptions={emailOpt} />
                 <InputField label="비밀번호" name="password" register={register} errors={errors} type="password" inputOptions={pwOpt} />
                 <ErrorText onError={onError} isLog={true} />
-                <Button type="submit" className=' w-full h-10 mt-4 bg-blue'>로그인</Button>
+                <Button type="submit" className=' bg-blue'>로그인</Button>
+                <SocialLoginBtn provider="Google" />
+                <SocialLoginBtn provider="Github" />
             </form>
         </div>
     );
