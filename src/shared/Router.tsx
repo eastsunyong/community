@@ -1,4 +1,4 @@
-import { LogIn, SignIn, Home, SignIn2 } from '@/page'
+import { LogIn, SignIn, Home } from '@/page'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -9,8 +9,7 @@ const Router = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={isAuthenticated ? <Home /> : <LogIn />} />
-                <Route path="/register" element={isAuthenticated ? <Home /> : <SignIn />} />
-                <Route path="/signin" element={isAuthenticated ? <Home /> : <SignIn2 />} />
+                <Route path="/signup" element={isAuthenticated ? <Home /> : <SignIn />} />
             </Routes>
         </BrowserRouter>
     )
