@@ -1,7 +1,6 @@
 import useCustomForm from '@/hooks/useCustomForm';
 import { emailOpt, pwOpt, pwCheckOpt, profileOpt, nickNameOpt, bioOpt } from '@/interface/validation';
 import { Button } from '@/components/ui/button';
-import RegistetText from '@/components/auth/SignupText';
 import InputField from '@/components/auth/InputField';
 import { useProfile } from '@/hooks/useProfile';
 import ErrorText from '@/components/auth/ErrorText';
@@ -12,7 +11,10 @@ const SignIn = () => {
 
     return (
         <div className='w-full h-screen flex-col bg-gray flex items-center justify-center px-10'>
-            <RegistetText />
+            <div className='w-3/12 mb-2'>
+                <h2 className='text-black text-l font-bold'>필수 정보 입력</h2>
+                <p className='text-fontGray text-xs'> 가입을 위해 필수 정보를 입력해주세요. </p>
+            </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className='w-3/12 h-4/6 mb-20 rounded-md'>
                 <InputField label="프로필 이미지" name="profile" type="file" register={register} errors={errors} inputOptions={profileOpt} previewImage={previewImage} />
@@ -24,7 +26,7 @@ const SignIn = () => {
                 <ErrorText onError={onError} isLog={false} />
                 <Button
                     type="submit"
-                    className='bg-blue w-full h-10 mt-9'>회원가입
+                    className='bg-blue mt-6'>회원가입
                 </Button>
             </form>
         </div>
