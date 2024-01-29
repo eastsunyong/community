@@ -6,9 +6,10 @@ interface IImageFieldProps {
     register: UseFormRegister<FieldValues>;
     inputOptions?: RegisterOptions;
     previewImage?: string;
+    defaultValue?: string;
 }
 
-const ImageField: React.FC<IImageFieldProps> = ({ previewImage, register, name, inputOptions }) => {
+const ImageField: React.FC<IImageFieldProps> = ({ previewImage, register, name, inputOptions, defaultValue }) => {
     const handleImageClick = () => {
         const fileInput = document.getElementById(name) as HTMLInputElement | null;
         fileInput?.click();
@@ -16,7 +17,7 @@ const ImageField: React.FC<IImageFieldProps> = ({ previewImage, register, name, 
     return (
         <>
             <div className='relative w-20 h-20 rounded-full overflow-visible cursor-pointer' onClick={handleImageClick}>
-                <img src={previewImage ? previewImage : "/userDefalt.jpg"} className='w-full h-full object-cover rounded-full' alt="프로필 이미지" />
+                <img src={previewImage ? previewImage : defaultValue || "/userDefalt.jpg"} className='w-full h-full object-cover rounded-full' alt="프로필 이미지" />
                 <label className='absolute bottom-[-14px] right-[-12px] w-12 h-12 flex items-center justify-center rounded-full'>
                     <img src="/userDefalt.jpg" className='w-8 h-8 rounded-full' alt="기본 이미지" />
                 </label>

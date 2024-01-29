@@ -26,3 +26,16 @@ export interface IUseCustomFormResult {
   watch: UseFormWatch<IFormValues>;
   onError: IError;
 }
+export interface IAnswer {
+  success: boolean;
+  errorCode?: string;
+}
+
+export interface IUserInfoData {
+  email: string;
+  password?: string;
+  nickname: string;
+  bio: string;
+  profileImage: string;
+  uid: string;
+}
