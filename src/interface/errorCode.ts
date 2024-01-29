@@ -8,6 +8,8 @@ export const errorCodeHandler = (error: IError, isLogin: boolean) => {
       return '이메일 혹은 비밀번호가 일치하지 않습니다.';
     case 'auth/email-already-in-use':
       return '이미 사용 중인 이메일입니다.';
+    case 'Passwords do not match':
+      return '비밀번호가 일치하지 않습니다';
     case 'auth/user-not-found':
       return '등록되어 있지 않은 유저입니다.';
     case 'auth/network-request-failed':
