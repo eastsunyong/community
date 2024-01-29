@@ -5,11 +5,16 @@ export interface IFormValues {
   password: string;
   passwordCheck?: string;
   nickName?: string;
-  profile?: string;
+  profile?: FileList | undefined;
   bio?: string;
 }
 
 export interface IError {
+  errorCode?: string;
+}
+
+export interface IResult {
+  success: boolean;
   errorCode?: string;
 }
 
