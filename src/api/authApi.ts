@@ -1,6 +1,12 @@
 import { IFormValues, IResult } from '@/interface';
 import { auth, db, storage } from '@/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithPopup,
+  AuthProvider,
+} from 'firebase/auth';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
@@ -10,6 +16,7 @@ interface Iprops {
   passwordCheck?: string;
 }
 
+// 로그인
 export const login = async (data: Iprops): Promise<IResult> => {
   try {
     await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -20,6 +27,7 @@ export const login = async (data: Iprops): Promise<IResult> => {
   }
 };
 
+//회원가입
 export const signup = async (data: IFormValues): Promise<IResult> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
@@ -50,6 +58,17 @@ export const signup = async (data: IFormValues): Promise<IResult> => {
   }
 };
 
+// 로그아웃
 export const logout = async () => {
   await signOut(auth);
+};
+
+// 소셜로그인
+export const socialLogin = async (provider: AuthProvider): Promise<IResult> => {
+  try {
+    await signInWithPopup(auth, provider);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false };
+  }
 };
