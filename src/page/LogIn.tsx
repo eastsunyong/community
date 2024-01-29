@@ -4,7 +4,7 @@ import { emailOpt, pwOpt } from '@/interface/validation';
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/auth/InputField';
 import ErrorText from '@/components/auth/ErrorText';
-import SocialLoginBtn from '@/components/auth/socialLoginBtn';
+import SocialLoginBtn from '@/components/auth/SocialLoginBtn';
 
 const LogIn: React.FC = () => {
     const { register, handleSubmit, errors, onSubmit, onError } = useCustomForm();
