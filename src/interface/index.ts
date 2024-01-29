@@ -26,3 +26,7 @@ export interface IUseCustomFormResult {
   watch: UseFormWatch<IFormValues>;
   onError: IError;
 }
+export interface IAnswer {
+  success: boolean;
+  errorCode?: string;
+}
