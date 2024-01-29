@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
 import { IFormValues, IError, IUseCustomFormResult, IAnswer } from '@/interface';
-import { login, signup } from '@/api/authApi';
+import { login, signup, updateUserInfo } from '@/api/authApi';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '@/firebase';
 
 const useCustomForm = (): IUseCustomFormResult => {
   const nav = useNavigate();
@@ -48,13 +49,26 @@ const useCustomForm = (): IUseCustomFormResult => {
       const answer = await signup(data);
       handleAuthentication(answer);
     }
+
+    // 유저 정보 업데이트
+    if (!data.email) {
+      if (auth.currentUser) {
+        const answer = await updateUserInfo(data, auth.currentUser?.uid);
+        if (answer.success) {
+          nav(`/mypage/${auth.currentUser.uid}`);
+        } else {
+          setOnError({
+            errorCode: answer.errorCode,
+          });
+        }
+      }
+    }
   };
 
   // 중복되는거 따로 빼기
   const handleAuthentication = (answer: IAnswer) => {
     if (answer.success) {
       nav('/');
-      alert('인증 성공');
     } else {
       setOnError({
         errorCode: answer.errorCode,
