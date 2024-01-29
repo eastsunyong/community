@@ -36,10 +36,11 @@ export const signup = async (data: IFormValues): Promise<IResult> => {
 
     await setDoc(userDocRef, {
       email: data.email,
+      password: data.password,
       nickname: data.nickName,
       bio: data.bio,
       profileImage: '',
-      createData: new Date(),
+      uid: user.uid,
     });
 
     if (data.profile && data.profile.length) {
