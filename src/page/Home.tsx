@@ -1,3 +1,4 @@
+import { logout } from '@/api/authApi';
 import { db, auth } from '@/firebase';
 import { collection, getDocs, DocumentData } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
@@ -14,7 +15,7 @@ interface IUser {
 
 const Home = () => {
     const [data, setData] = useState<IUser[]>([]);
-    console.log(data);
+    const [currentUser, setCurrentUser] = useState<IUser | null>(null);
     const nav = useNavigate();
 
     useEffect(() => {
@@ -37,8 +38,15 @@ const Home = () => {
                 // 현재 로그인한 사용자의 UID 가져오기
                 const currentUserUid = auth.currentUser?.uid;
 
-                // 모든 사용자 정보를 가져온 후 현재 로그인한 사용자의 UID와 일치하는 정보를 필터링하여 제외
-                const newData = Array.from(querySnapshot.docs, mapData).filter(user => user.uid !== currentUserUid);
+                // 모든 사용자 정보를 가져온 후 현재 로그인한 사용자의 정보를 찾아서 별도의 state에 저장
+                const allUsers = Array.from(querySnapshot.docs, mapData);
+                const currentUserData = allUsers.find(user => user.uid === currentUserUid);
+                if (currentUserData) {
+                    setCurrentUser(currentUserData);
+                }
+
+                // 현재 로그인한 사용자의 정보를 제외한 정보를 필터링하여 저장
+                const newData = allUsers.filter(user => user.uid !== currentUserUid);
                 setData(newData);
             } catch (error) {
                 console.error('Error fetching data: ', error);
@@ -66,6 +74,7 @@ const Home = () => {
                     </div>
                 </div>
             ))}
+            <p onClick={logout}>로그아웃</p>
         </div>
     );
 };
