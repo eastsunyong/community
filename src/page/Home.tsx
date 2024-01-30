@@ -16,7 +16,12 @@ interface IUser {
 const Home = () => {
     const [data, setData] = useState<IUser[]>([]);
     const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+    const test = auth.currentUser
+
     const nav = useNavigate();
+    console.log(currentUser);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,6 +80,7 @@ const Home = () => {
                 </div>
             ))}
             <p onClick={logout}>로그아웃</p>
+            <p onClick={() => { nav('/login') }}>로그인</p>
         </div>
     );
 };
