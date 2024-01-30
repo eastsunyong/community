@@ -10,14 +10,8 @@ import {
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-interface Iprops {
-  email: string;
-  password: string;
-  passwordCheck?: string;
-}
-
 // 로그인
-export const login = async (data: Iprops): Promise<IResult> => {
+export const login = async (data: IFormValues): Promise<IResult> => {
   try {
     await signInWithEmailAndPassword(auth, data.email, data.password);
     return { success: true };
