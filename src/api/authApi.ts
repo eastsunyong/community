@@ -35,6 +35,8 @@ export const signup = async (data: IFormValues): Promise<IResult> => {
       bio: data.bio,
       profileImage: '',
       uid: user.uid,
+      follower: 0,
+      following: 0,
     });
 
     if (data.profile && data.profile.length) {
