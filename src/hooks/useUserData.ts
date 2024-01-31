@@ -28,6 +28,6 @@ export const useUserData = (userId: any) => {
     };
 
     fetchData();
-  }, [auth.currentUser, userId]);
+  }, [userId]);
   return { myUserData, otherUserData, loading };
 };
