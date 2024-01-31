@@ -7,17 +7,11 @@ import {
   signInWithPopup,
   AuthProvider,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-interface Iprops {
-  email: string;
-  password: string;
-  passwordCheck?: string;
-}
-
 // 로그인
-export const login = async (data: Iprops): Promise<IResult> => {
+export const login = async (data: IFormValues): Promise<IResult> => {
   try {
     await signInWithEmailAndPassword(auth, data.email, data.password);
     return { success: true };
@@ -67,10 +61,36 @@ export const logout = async () => {
 // 소셜로그인
 export const socialLogin = async (provider: AuthProvider): Promise<IResult> => {
   try {
-    await signInWithPopup(auth, provider);
-    return { success: true };
+    const result = await signInWithPopup(auth, provider);
+    // 소셜 로그인이 성공한 경우
+    if (result.user) {
+      // 사용자 정보 가져오기
+      const { uid, displayName, email, photoURL } = result.user;
+      // Firestore에 사용자 정보 저장
+      const userDocRef = doc(collection(db, 'users'), uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        // 사용자가 Firestore에 등록되어 있지 않은 경우에만 저장
+        await setDoc(userDocRef, {
+          email: email,
+          uid: uid,
+          nickname: displayName,
+          profileImage: photoURL,
+          bio: '',
+          // 추가 필요한 속성 등
+        });
+
+        console.log('소셜 로그인 사용자 정보 Firestore 저장 성공!');
+      }
+
+      return { success: true };
+    } else {
+      return { success: false, errorCode: 'User information not available' };
+    }
   } catch (error: any) {
-    return { success: false };
+    console.error('소셜 로그인 실패:', error);
+    return { success: false, errorCode: error.code };
   }
 };
 
@@ -115,6 +135,7 @@ export const deleteFile = async (filePath: string | undefined) => {
   }
 };
 
+// 유저 정보 업데이트
 export const updateUserInfo = async (data: IFormValues, uid: string): Promise<IResult> => {
   if (uid) {
     const docRef = doc(db, 'users', uid);
