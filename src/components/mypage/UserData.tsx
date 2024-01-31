@@ -6,6 +6,7 @@ import { auth } from '@/firebase';
 const UserData = ({ userData, userId, loading }: any) => {
     const nav = useNavigate()
 
+
     return (
         <div className='w-5/12 h-screen bg-gray'>
             {loading && <p>Loading...</p>}
@@ -15,9 +16,9 @@ const UserData = ({ userData, userId, loading }: any) => {
                     src={`${userData.profileImage ? userData.profileImage : '/userDefalt.jpg'}`}
                 />
                 <div className='flex flex-row items-center gap-6'>
-                    <InfoBox num={12} info={'팔로잉'} />
-                    <InfoBox num={12} info={'팔로워'} />
                     <InfoBox num={12} info={'게시물'} />
+                    <InfoBox num={userData.followers?.length} info={'팔로워'} />
+                    <InfoBox num={userData.following?.length} info={'팔로우'} />
                 </div>
             </div>
             <div className='px-20 pt-3 font-bold text-m flex justify-between mt-5 items-center'>
