@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   AuthProvider,
 } from 'firebase/auth';
-import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 // 로그인
@@ -168,4 +168,31 @@ export const updateUserInfo = async (data: IFormValues, uid: string): Promise<IR
   } else {
     return { success: false };
   }
+};
+
+export const getUserData = async (userId: string) => {
+  const userDocRef = doc(db, 'users', userId);
+  const userDocSnapshot = await getDoc(userDocRef);
+
+  if (userDocSnapshot.exists()) {
+    return userDocSnapshot.data() as Document;
+  }
+
+  return null;
+};
+
+export const followUser = async (userId: string) => {
+  const currentUserRef = doc(collection(db, 'users'), auth.currentUser?.uid);
+  const targetUserRef = doc(collection(db, 'users'), userId);
+
+  await updateDoc(currentUserRef, { following: arrayUnion(userId) });
+  await updateDoc(targetUserRef, { followers: arrayUnion(auth.currentUser?.uid) });
+};
+
+export const unfollowUser = async (userId: string) => {
+  const currentUserRef = doc(collection(db, 'users'), auth.currentUser?.uid);
+  const targetUserRef = doc(collection(db, 'users'), userId);
+
+  await updateDoc(currentUserRef, { following: arrayRemove(userId) });
+  await updateDoc(targetUserRef, { followers: arrayRemove(auth.currentUser?.uid) });
 };
