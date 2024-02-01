@@ -2,14 +2,14 @@ import InputField from '@/components/auth/InputField'
 import { Button } from '@/components/ui/button';
 import useCustomForm from '@/hooks/useCustomForm';
 import { useProfile } from '@/hooks/useProfile';
-import { useUserData } from '@/hooks/useUserData';
+import { useFollow } from '@/hooks/useFollow';
 import { bioOpt, nickNameOpt, profileOpt } from '@/interface/validation';
 import { useParams } from 'react-router-dom';
 
 const Edit = () => {
     const { register, handleSubmit, errors, onSubmit, watch } = useCustomForm();
     const { userId } = useParams() as { userId: string };
-    const { myUserData } = useUserData(userId);
+    const { userInfo } = useFollow(userId);
     const { previewImage } = useProfile(watch)
 
     return (
@@ -20,9 +20,9 @@ const Edit = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className='w-3/12 h-4/6 mb-20 rounded-md'>
-                <InputField label="프로필 이미지" name="profile" type="file" register={register} errors={errors} inputOptions={profileOpt} previewImage={previewImage} defaultValue={myUserData.profileImage} />
-                <InputField label="닉네임" name="nickName" register={register} errors={errors} inputOptions={nickNameOpt} defaultValue={myUserData.nickname} />
-                <InputField label="자기소개" name="bio" register={register} errors={errors} type="textarea" inputOptions={bioOpt} defaultValue={myUserData.bio} />
+                <InputField label="프로필 이미지" name="profile" type="file" register={register} errors={errors} inputOptions={profileOpt} previewImage={previewImage} defaultValue={userInfo?.profileImage} />
+                <InputField label="닉네임" name="nickName" register={register} errors={errors} inputOptions={nickNameOpt} defaultValue={userInfo?.nickname} />
+                <InputField label="자기소개" name="bio" register={register} errors={errors} type="textarea" inputOptions={bioOpt} defaultValue={userInfo?.bio} />
                 <Button
                     type="submit"
                     className='bg-blue mt-6'>수정하기
