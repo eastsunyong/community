@@ -38,4 +38,6 @@ export interface IUserInfoData {
   bio: string;
   profileImage: string;
   uid: string;
+  following: [];
+  followers: [];
 }

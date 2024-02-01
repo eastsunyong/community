@@ -1,9 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 
-export default function PrivateRouter() {
-    const isAuthenticated = useAuth();
-    console.log(isAuthenticated);
-
-    return <>{isAuthenticated ? <Outlet /> : <Navigate to={'/'} />}</>;
+interface PrivateRouterProps {
+    isAuthenticated: boolean;
+    children?: React.ReactNode;
 }
+
+const PrivateRouter = ({ isAuthenticated }: PrivateRouterProps) => {
+    return <>{isAuthenticated ? <Outlet /> : <Navigate to={'/'} />}</>;
+};
+
+export default PrivateRouter;
