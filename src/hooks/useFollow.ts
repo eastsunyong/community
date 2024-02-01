@@ -1,48 +1,52 @@
-import { useState } from 'react';
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, collection } from 'firebase/firestore';
-import { auth, db } from '@/firebase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { auth } from '@/firebase';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { followUser, getOtherUserData, unfollowUser } from '@/api/authApi';
 
-const followUser = async (userId: string) => {
-  const currentUserRef = doc(collection(db, 'users'), auth.currentUser?.uid);
-  const targetUserRef = doc(collection(db, 'users'), userId);
-
-  await updateDoc(currentUserRef, { following: arrayUnion(userId) });
-  await updateDoc(targetUserRef, { followers: arrayUnion(auth.currentUser?.uid) });
-};
-
-const unfollowUser = async (userId: string) => {
-  const currentUserRef = doc(collection(db, 'users'), auth.currentUser?.uid);
-  const targetUserRef = doc(collection(db, 'users'), userId);
-
-  await updateDoc(currentUserRef, { following: arrayRemove(userId) });
-  await updateDoc(targetUserRef, { followers: arrayRemove(auth.currentUser?.uid) });
-};
-
-const useFollow = (userId: string) => {
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+export const useFollow = (userId: string) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationKey: ['FollowOrUnFollow'],
-    mutationFn: async () => {
-      const previousIsFollowing = await queryClient.getQueryData(['isFollow', userId]);
-      const newIsFollowing = !previousIsFollowing;
-
-      if (newIsFollowing) {
-        await followUser(userId);
-      } else {
-        await unfollowUser(userId);
-      }
-
-      // 업데이트된 값을 설정
-      queryClient.setQueryData(['isFollow', userId], newIsFollowing);
-
-      setIsFollowing(newIsFollowing);
-    },
+  const { data: userInfo } = useQuery({
+    queryKey: ['Mypage', userId],
+    queryFn: () => getOtherUserData(userId),
   });
 
-  return [isFollowing, mutation.mutate] as const;
-};
+  const { mutate: follow } = useMutation({
+    mutationFn: async () => {
+      await followUser(userId);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Mypage', userId] }),
+  });
+  const { mutate: unFollow } = useMutation({
+    mutationFn: async () => {
+      await unfollowUser(userId);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Mypage', userId] }),
+  });
 
-export default useFollow;
+  const isFollower = userInfo?.followers?.includes(auth.currentUser?.uid);
+
+  const handleFollowToggle = async () => {
+    try {
+      if (!isFollower) {
+        await follow();
+      } else {
+        await unFollow();
+      }
+      // // Optimistic update: Update the UI immediately
+      // queryClient.setQueryData(['Mypage', userId], (prevData: IUserInfoData) => {
+      //   console.log('prevData:', prevData);
+
+      //   return {
+      //     ...prevData,
+      //     followers: isFollower
+      //       ? prevData.followers.filter((follower) => follower !== auth.currentUser?.uid)
+      //       : [...prevData.followers, auth.currentUser?.uid],
+      //   };
+      // });
+    } catch (error) {
+      console.error('Error toggling follow:', error);
+    }
+  };
+
+  return { userInfo, handleFollowToggle };
+};
