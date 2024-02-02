@@ -1,16 +1,19 @@
-import React from 'react'
+// InfoBox.tsx
+import React from 'react';
 
-interface IPorps {
+interface InfoBoxProps {
     num: number;
     info: string;
-}
-const InfoBox = (props: IPorps) => {
-    return (
-        <div className='flex flex-col items-center'>
-            <p>{props.num}</p>
-            <p>{props.info}</p>
-        </div>
-    )
+    onClick?: () => void; // 클릭 이벤트 핸들러 추가
 }
 
-export default InfoBox
+const InfoBox: React.FC<InfoBoxProps> = ({ num, info, onClick }) => {
+    return (
+        <div className="flex flex-col items-center cursor-pointer" onClick={onClick}>
+            <p className="text-lg font-bold">{num}</p>
+            <p className="text-sm">{info}</p>
+        </div>
+    );
+};
+
+export default InfoBox;
