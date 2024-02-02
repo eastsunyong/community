@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 const GuestRoute = () => {
     const { user } = useAuth();
 
-    return <>{user ? <Navigate to={'/'} /> : <Outlet />}</>;
+    return <>{user === null ? <Outlet /> : <Navigate to={'/'} />}</>;
 };
 
 export default GuestRoute;
