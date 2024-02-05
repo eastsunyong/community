@@ -2,7 +2,7 @@ import useCustomForm from '@/hooks/useCustomForm';
 import { emailOpt, pwOpt, pwCheckOpt, profileOpt, nickNameOpt, bioOpt } from '@/interface/validation';
 import { Button } from '@/components/ui/button';
 import InputField from '@/components/auth/InputField';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/usePreview';
 import ErrorText from '@/components/auth/ErrorText';
 
 const SignIn = () => {

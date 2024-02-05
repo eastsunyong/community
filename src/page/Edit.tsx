@@ -1,7 +1,7 @@
 import InputField from '@/components/auth/InputField'
 import { Button } from '@/components/ui/button';
 import useCustomForm from '@/hooks/useCustomForm';
-import { useProfile } from '@/hooks/useProfile';
+import { useProfile } from '@/hooks/usePreview';
 import { useFollow } from '@/hooks/useFollow';
 import { bioOpt, nickNameOpt, profileOpt } from '@/interface/validation';
 import { useParams } from 'react-router-dom';
