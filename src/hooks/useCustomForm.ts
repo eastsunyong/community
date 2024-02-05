@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler, FieldErrors } from 'react-hook-form';
 import { IFormValues, IError, IUseCustomFormResult, IAnswer } from '@/interface';
-import { login, signup, updateUserInfo } from '@/api/authApi';
+import { createPost, login, signup, updateUserInfo } from '@/api/authApi';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '@/firebase';
 
@@ -63,12 +63,17 @@ const useCustomForm = (): IUseCustomFormResult => {
         }
       }
     }
+    if (data.title && data.content) {
+      const answer = await createPost(data);
+      handleAuthentication(answer);
+    }
   };
 
   // 중복되는거 따로 빼기
   const handleAuthentication = (answer: IAnswer) => {
     if (answer.success) {
       nav('/');
+      alert('성공');
     } else {
       setOnError({
         errorCode: answer.errorCode,
@@ -84,6 +89,8 @@ const useCustomForm = (): IUseCustomFormResult => {
     nickName: '',
     profile: '',
     bio: '',
+    title: '',
+    content: '',
   };
 
   // 기존 에러 정보를 문자열로 변환하여 할당
