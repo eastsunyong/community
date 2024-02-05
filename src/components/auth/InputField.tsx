@@ -13,7 +13,7 @@ interface InputFieldProps {
     type?: 'text' | 'password' | 'file' | 'textarea' | 'confirm';
     placeholder?: string;
     inputOptions?: RegisterOptions;
-    previewImage?: string | string[];
+    previewImage?: string[];
     defaultValue?: string;
     usage?: string;
 }

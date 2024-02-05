@@ -5,7 +5,7 @@ interface IImageFieldProps {
     name: string;
     register: UseFormRegister<FieldValues>;
     inputOptions?: RegisterOptions;
-    previewImages?: string[] | string;
+    previewImages?: string[]
     defaultValue?: string;
     usage?: string;
 }
@@ -36,7 +36,7 @@ const ImageField: React.FC<IImageFieldProps> = ({ previewImages, register, name,
                         <label className='absolute bottom-[-14px] right-[-12px] w-12 h-12 flex items-center justify-center rounded-full'>
                             <img src='/imagePlus.png' alt='기본 이미지' />
                         </label>
-                        <input type='file' accept='image/*' id={name} className='absolute top-0 left-0 w-full h-full opacity-0' {...register(name, inputOptions)} hidden multiple />
+                        <input type='file' accept='image/*' hidden multiple id={name} className='absolute top-0 left-0 w-full h-full opacity-0' {...register(name, inputOptions)} />
                     </>
                 }
             </div>
