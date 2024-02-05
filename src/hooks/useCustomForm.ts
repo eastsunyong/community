@@ -51,7 +51,7 @@ const useCustomForm = (): IUseCustomFormResult => {
     }
 
     // 유저 정보 업데이트
-    if (!data.email) {
+    if (!data.email && data.nickName && data.bio) {
       if (auth.currentUser) {
         const answer = await updateUserInfo(data, auth.currentUser?.uid);
         if (answer.success) {
