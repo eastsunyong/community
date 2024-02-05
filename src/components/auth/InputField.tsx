@@ -13,16 +13,17 @@ interface InputFieldProps {
     type?: 'text' | 'password' | 'file' | 'textarea' | 'confirm';
     placeholder?: string;
     inputOptions?: RegisterOptions;
-    previewImage?: string;
+    previewImage?: string | string[];
     defaultValue?: string;
+    usage?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, name, register, errors, type = 'text', placeholder = '', inputOptions = {}, previewImage, defaultValue }) => {
+const InputField: React.FC<InputFieldProps> = ({ label, name, register, errors, type = 'text', placeholder = '', inputOptions = {}, previewImage, defaultValue, usage }) => {
     return (
         <div className={`flex flex-col ${type === 'file' ? 'items-center' : 'justify-center'} relative pb-6`}>
             {type !== 'file' && <Label>{label}</Label>}
             {type === 'file' ?
-                <ImageField name={name} register={register} inputOptions={inputOptions} previewImage={previewImage} defaultValue={defaultValue} />
+                <ImageField name={name} register={register} inputOptions={inputOptions} previewImages={previewImage} defaultValue={defaultValue} usage={usage} />
                 : type === 'textarea' ?
                     (
                         <Textarea

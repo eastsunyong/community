@@ -7,7 +7,7 @@ import ErrorText from '@/components/auth/ErrorText';
 
 const SignIn = () => {
   const { register, handleSubmit, errors, onSubmit, watch, onError } = useCustomForm();
-  const { previewImage } = useProfile(watch)
+  const { previewImages } = useProfile(watch)
 
   return (
     <div className='w-full h-screen flex-col bg-gray flex items-center justify-center px-10'>
@@ -17,7 +17,7 @@ const SignIn = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className='w-3/12 h-4/6 mb-20 rounded-md'>
-        <InputField label="프로필 이미지" name="profile" type="file" register={register} errors={errors} inputOptions={profileOpt} previewImage={previewImage} />
+        <InputField label="프로필 이미지" name="profile" type="file" register={register} errors={errors} inputOptions={profileOpt} previewImage={previewImages} usage='회원가입' />
         <InputField label='이메일' name='email' register={register} errors={errors} inputOptions={emailOpt} />
         <InputField label="비밀번호" name="password" type="password" register={register} errors={errors} inputOptions={pwOpt} />
         <InputField label="비밀번호 확인" name="passwordCheck" type="password" register={register} errors={errors} inputOptions={pwCheckOpt} />
