@@ -7,6 +7,8 @@ export interface IFormValues {
   nickName?: string;
   profile?: FileList | undefined;
   bio?: string;
+  title?: string;
+  content?: string;
 }
 
 export interface IError {
