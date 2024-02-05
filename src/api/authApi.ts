@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   AuthProvider,
 } from 'firebase/auth';
-import { arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 // 로그인
@@ -195,4 +195,33 @@ export const unfollowUser = async (userId: string) => {
 
   await updateDoc(currentUserRef, { following: arrayRemove(userId) });
   await updateDoc(targetUserRef, { followers: arrayRemove(auth.currentUser?.uid) });
+};
+
+export const createPost = async (data: any): Promise<IResult> => {
+  try {
+    // 이미지를 Firebase Storage에 업로드하고 URL을 가져오기
+    const images = [...data.profile] || []; // images가 undefined일 경우 빈 배열로 초기화
+
+    const imageUrls = await Promise.all(
+      images.map(async (image: File) => {
+        const imageRef = ref(storage, `images/${auth.currentUser?.uid}_${image.name}`);
+        await uploadBytes(imageRef, image);
+        return getDownloadURL(imageRef);
+      }),
+    );
+
+    // Firestore에 게시물 추가
+    await addDoc(collection(db, 'posts'), {
+      title: data.title,
+      content: data.content,
+      imageUrls,
+      timestamp: new Date(),
+      userId: auth.currentUser?.uid,
+    });
+    console.log('게시물이 성공적으로 생성되었습니다!');
+    return { success: true };
+  } catch (error) {
+    console.error('게시물 생성 중 오류 발생:', error);
+    return { success: true };
+  }
 };
