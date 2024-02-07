@@ -3,12 +3,14 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { Home, SignIn, LogIn, MyPage, Edit } from '@/page';
 import PrivateRouter from './PrivateRouter';
 import GuestRoute from './GuestRoute';
+import Test from '@/page/Test';
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/test" element={<Test />} />
         <Route element={<GuestRoute />}>
           <Route path="/signup" element={<SignIn />} />
           <Route path="/login" element={<LogIn />} />
