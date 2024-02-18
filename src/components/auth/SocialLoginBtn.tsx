@@ -26,7 +26,7 @@ const SocialLoginBtn = ({ provider }: IPros) => {
                 authProvider = new TwitterAuthProvider();
                 break;
             default:
-                console.error('Unsupported social provider:', provider);
+                console.error('소셜 로그인 실패:', provider);
                 return;
         }
 
