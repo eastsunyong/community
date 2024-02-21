@@ -76,7 +76,7 @@ const Test = () => {
     return (
         <>
             <CreatePost />
-            {/* <GetPosts /> */}
+            <GetPosts />
         </>
     );
 };
